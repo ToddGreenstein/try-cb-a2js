@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="panel">
+      <div class="panel-heading">
+        <img src="CBTravel.LOGO.png">
+      </div>
+      <div class="panel-body">
+        <form role="form" class="form-signin" name="loginForm" novalidate>
+        <h3 class="form-signin-heading" [hidden]="!isNew">Please Take a Moment to Create an Account</h3>
+        <h3 class="form-signin-heading" [hidden]="isNew">Please Enter Your Username and Password</h3>
+        <div class="alert alert-warning" role="alert" [hidden]="!loginError">{{loginError}}</div>
+        <input type="text" placeholder="Please Enter Your Email Address" required [(ngModel)]="username" (keyup)="loginError=null" class="form-control" />
+        <input type="password" placeholder="Enter a password" required="" [(ngModel)]="password" (keyup)="loginError=null" class="form-control" />
+        <label class="checkbox">
+          <input #newUser type="checkbox" checked (change)="isNew=newUser.checked" />New User
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" ng-checked="showCode" name="narration" ng-change="toggleDebug()" ng-model="narration" ng-init="narration=showCode" />Enable Narration
+        </label>
+        <button type="button" class="btn btn-lg btn-primary btn-block" [disabled]="!username || !password" (click)="login(username, password, isNew)">Sign in</button>
+        </form>
+      </div>
+    </div>
+</div>

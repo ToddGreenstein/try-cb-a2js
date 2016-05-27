@@ -11,7 +11,10 @@ module.exports = function(defaults) {
       'es6-shim/es6-shim.js',
       'reflect-metadata/**/*.+(js|js.map)',
       'rxjs/**/*.+(js|js.map)',
-      '@angular/**/*.+(js|js.map)'
+      '@angular/**/*.+(js|js.map)',
+      'bootstrap/dist/**/*.+(js|js.map|css|css.map|eot|svg|ttf|woff|woff2)',
+      'jquery/dist/*.+(js|js.map)',
+      'ng2-bootstrap/**'
     ]
   });
 };
