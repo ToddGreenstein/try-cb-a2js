@@ -14,5 +14,5 @@ This application uses Angular 2.0 and typescript.  The developer environment req
 
  - [3] From a terminal:
 
-    **npm install
+    **npm install    
     ng serve**
