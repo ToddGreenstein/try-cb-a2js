@@ -1,16 +1,14 @@
 import { Injectable, Inject } from "@angular/core";
-//import {Http, Request, RequestMethod, Headers, HTTP_PROVIDERS} from "@angular/http";
 import { IUser } from "./interfaces";
 import { UtilityService } from "./utility.service";
 
 @Injectable()
-
 export class AuthService {
 
   utility: UtilityService;
 
   constructor(utility: UtilityService) {
-    //this.utility = utility
+    this.utility = utility
   }
 
   isAuthenticated() {
