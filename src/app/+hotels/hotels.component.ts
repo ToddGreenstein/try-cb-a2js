@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injectable, Inject } from '@angular/core';
 import {
   CORE_DIRECTIVES,
   FORM_DIRECTIVES,
@@ -6,6 +6,9 @@ import {
   ControlGroup,
   Validators
 } from '@angular/common';
+import { UtilityService } from "../shared/utility.service";
+import { environment } from "../";
+
 
 @Component({
   moduleId: module.id,
@@ -14,14 +17,19 @@ import {
   templateUrl: 'hotels.component.html'
 })
 
-export class HotelsComponent implements OnInit {
-  hotelForm: ControlGroup;
+@Injectable()
 
-  constructor(fb: FormBuilder) {
+export class HotelsComponent implements OnInit {
+
+  hotelForm: ControlGroup;
+  utility: UtilityService;
+
+  constructor(fb: FormBuilder, utility: UtilityService) {
     this.hotelForm = fb.group({
-      'location':  ['', Validators.required],
-      'description': ['', Validators.required]
+       'description': [''],
+      'location':  ['']
     });
+    this.utility = utility;
   }
 
   ngOnInit() {
@@ -29,5 +37,21 @@ export class HotelsComponent implements OnInit {
 
   onSubmit(value: any): void {
     console.log('you searched for hotel:', value);
+    var location = value.location;
+    var description = value.description;
+
+    var url = environment.baseApiUrl + "/api/hotel/";
+    if (description != null && description != "") {
+        url = url + description + "/";
+        if (location != null && location != "") {
+            url = url + location + "/";
+        }
+    }
+
+    this.utility.makeGetRequestObs(url, [])
+    .subscribe(
+        (success) => { console.log(success); },
+        (error) => { console.log(error.json()); }
+    );
   }
 }
