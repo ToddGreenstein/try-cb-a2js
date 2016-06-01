@@ -1,11 +1,9 @@
 import { Injectable, Inject } from "@angular/core";
-//import {Http, Request, RequestMethod, Headers, HTTP_PROVIDERS} from "@angular/http";
 import { IUser } from "./interfaces";
 import { UtilityService } from "./utility.service";
 import { environment } from "./../../app/";
 
 @Injectable()
-
 export class AuthService {
 
   utility: UtilityService;
