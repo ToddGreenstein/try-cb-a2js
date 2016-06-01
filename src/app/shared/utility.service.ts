@@ -1,5 +1,5 @@
 import { Injectable, Inject } from "@angular/core";
-import { Http, Request, RequestMethod, Headers, HTTP_PROVIDERS } from "@angular/http";
+import { Http, Request, RequestMethod, Headers, URLSearchParams, HTTP_PROVIDERS } from "@angular/http";
 
 @Injectable()
 

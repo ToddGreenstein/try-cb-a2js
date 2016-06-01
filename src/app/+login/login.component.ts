@@ -24,15 +24,16 @@ export class LoginComponent implements OnInit {
 
   login(email:string,password:string,isNew:boolean){
     if(isNew){
-      //this.authService.debugServiceLogin(email,password);
-
-      this.authService.register(email,password);
-      this.router.navigate(["home"]);
+      this.authService.register(email,password).then((result) => {
+        this.router.navigate(["home"]);
+      }, (error) => {
+        this.loginError=error;
+        this.password=null;
+      });
     }else{
       this.authService.login(email, password).then((result) => {
                 this.router.navigate(["home"]);
             }, (error) => {
-                console.error(error);
                 this.loginError=error;
                 this.username=null;
                 this.password=null;

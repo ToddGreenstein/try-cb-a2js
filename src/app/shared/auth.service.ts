@@ -1,15 +1,20 @@
 import { Injectable, Inject } from "@angular/core";
-import { IUser } from "./interfaces";
+import { IUser,IToken } from "./interfaces";
 import { UtilityService } from "./utility.service";
 import { environment } from "./../../app/";
+import { md5 } from './md5';
+import { JwtHelper } from './angular2-jwt';
+
 
 @Injectable()
 export class AuthService {
 
   utility: UtilityService;
+  jwt: JwtHelper;
 
   constructor(utility: UtilityService) {
-    this.utility = utility
+    this.utility = utility;
+    this.jwt= new JwtHelper();
   }
 
   isAuthenticated() {
@@ -21,17 +26,25 @@ export class AuthService {
   }
 
   getUser(){
-    return localStorage.getItem("user");
+    if (localStorage.getItem("user")) {
+            return localStorage.getItem("user");
+        } else {
+            return null;
+        }
   }
 
 login(email: string, password: string) {
   return new Promise((resolve, reject) => {
-    this.utility.makeGetRequest(environment.devHost + "/api/user/login", [email, password]).then((result) => {
+    this.utility.makeGetRequest(environment.devHost + "/api/user/login", [email, md5(password)]).then((result) => {
       if (result) {
-        localStorage.setItem("user", JSON.stringify(result));
-        resolve(result);
+        let cToken = result as IToken;
+        if (cToken.status != "success") {
+          reject(cToken.status);
+        }
+        localStorage.setItem("user", this.jwt.decodeToken(cToken.token).user);
+        resolve();
       } else {
-        reject("User not found");
+        reject("User Error");
       }
     }, (error) => {
       reject(error);
@@ -40,11 +53,16 @@ login(email: string, password: string) {
 }
 
 register(email: string, password:string) {
-  let cUser:IUser = {user:email,password:password};
+  let cUser: IUser = { user: email, password: md5(password) };
   return new Promise((resolve, reject) => {
-    this.utility.makePostRequest(environment.devHost + "/api/user/login", [],cUser).then((result) => {
+    this.utility.makePostRequest(environment.devHost + "/api/user/login", [], cUser).then((result) => {
       if (result) {
-        // Login
+        let cToken = result as IToken;
+        if (cToken.status != "success") {
+          reject(cToken.status);
+        }
+        localStorage.setItem("user", this.jwt.decodeToken(cToken.token).user);
+        resolve();
       } else {
         reject("Registration Failure");
       }
@@ -53,13 +71,8 @@ register(email: string, password:string) {
     });
   });
 }
-      // return this.utility.makePostRequest(environment.devHost + "/api/user/login", [], user);
 
   deAuthenticate() {
     localStorage.clear();
-  }
-
-  debugServiceLogin(email: string, password: string){
-    localStorage.setItem("user","DEBUG");
   }
 }

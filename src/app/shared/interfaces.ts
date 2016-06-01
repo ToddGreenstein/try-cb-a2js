@@ -5,3 +5,8 @@ export interface IUser {
     token?: string,
     flights?: Array<Object>
 }
+
+export interface IToken {
+    status: string
+    token?: string
+}
