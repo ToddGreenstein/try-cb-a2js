@@ -74,7 +74,7 @@ export class UtilityService {
         .do((success) => {
             console.log("DEBUG: GET RESPONSE:",fullUrl,":",success.json());
         },
-            (error) => {
+        (error) => {
                 console.log("DEBUG: GET ERROR:",fullUrl,":",error);
             })
         .map(this.extractData)
@@ -82,7 +82,7 @@ export class UtilityService {
 
     private extractData(res: Response) {
         let body = res.json();
-        return body.data || { };
+        return body || { };
     }
 
     makeGetRequest(url: string, params: Array<string>) {

@@ -6,9 +6,11 @@ import {
   ControlGroup,
   Validators
 } from '@angular/common';
+import { Response } from "@angular/http";
+
 import { UtilityService } from "../shared/utility.service";
 import { environment } from "../";
-
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   moduleId: module.id,
@@ -23,6 +25,8 @@ export class HotelsComponent implements OnInit {
 
   hotelForm: ControlGroup;
   utility: UtilityService;
+  data;
+  error;
 
   constructor(fb: FormBuilder, utility: UtilityService) {
     this.hotelForm = fb.group({
@@ -35,23 +39,33 @@ export class HotelsComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSubmit(value: any): void {
+  findHotels(value: any): void {
     console.log('you searched for hotel:', value);
     var location = value.location;
     var description = value.description;
 
     var url = environment.baseApiUrl + "/api/hotel/";
-    if (description != null && description != "") {
-        url = url + description + "/";
-        if (location != null && location != "") {
-            url = url + location + "/";
-        }
+    var hasDescription = (description != null && description != "");
+    var hasLocation = (location != null && location != "");
+    if (hasDescription && hasLocation) {
+        url = url + description + "/" + location + "/";
+    } else if (hasLocation) {
+        url = url + "*/" + location + "/";
+    } else if (hasDescription) {
+        url = url + description + "/"
     }
 
     this.utility.makeGetRequestObs(url, [])
     .subscribe(
-        (success) => { console.log(success); },
-        (error) => { console.log(error.json()); }
+        (success) => {
+            console.log("DEBUG: found " + success.length + " matching hotels");
+            this.data = success;
+            this.error = null;
+        },
+        (error: Response) => {
+            this.data = null;
+            this.error = error.json();
+        }
     );
   }
 }
