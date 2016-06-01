@@ -24,7 +24,9 @@ export class LoginComponent implements OnInit {
 
   login(email:string,password:string,isNew:boolean){
     if(isNew){
-      this.authService.debugServiceLogin(email,password);
+      //this.authService.debugServiceLogin(email,password);
+
+      this.authService.register(email,password);
       this.router.navigate(["home"]);
     }else{
       this.authService.login(email, password).then((result) => {

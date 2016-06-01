@@ -9,6 +9,7 @@ import { Router, Routes , ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/r
   directives: [ROUTER_DIRECTIVES]
   //styleUrls: []
 })
+
 export class NavbarComponent {
   authService:AuthService;
   router:Router;
@@ -18,6 +19,5 @@ export class NavbarComponent {
     this.authService=authService;
     this.isNew=true;
     this.router=router;
-    console.log("DEBUG:construct");
   }
 }

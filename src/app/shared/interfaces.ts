@@ -1,7 +1,7 @@
 export interface IUser {
     _id?: string,
-    name: string,
+    user: string,
     password: string,
-    token: string,
+    token?: string,
     flights?: Array<Object>
 }
