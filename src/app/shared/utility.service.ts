@@ -77,18 +77,18 @@ export class UtilityService {
         (error) => {
                 console.log("DEBUG: GET ERROR:",fullUrl,":",error);
             })
-        .map(this.extractData)
     }
 
     private extractData(res: Response) {
         let body = res.json();
-        return body || { };
+        return body.data || { };
     }
 
     makeGetRequest(url: string, params: Array<string>) {
         let obs = this.makeGetRequestObs(url, params);
         return new Promise((resolve, reject) => {
             obs
+            .map(this.extractData)
             .subscribe((success) => {
                 resolve(success);
             }, (error) => {

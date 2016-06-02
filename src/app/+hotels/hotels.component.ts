@@ -56,6 +56,7 @@ export class HotelsComponent implements OnInit {
     }
 
     this.utility.makeGetRequestObs(url, [])
+    .map((response: Response) => response.json())
     .subscribe(
         (success) => {
             console.log("DEBUG: found " + success.length + " matching hotels");

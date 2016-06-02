@@ -4,5 +4,6 @@
 
 export const environment = {
   production: false,
-  baseApiUrl: "foo"
+  baseApiUrl: "http://localhost:3000",
+  jwtEnabled: true
 };
