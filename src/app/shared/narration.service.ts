@@ -27,4 +27,15 @@ export class NarrationService {
     addPre(step: string, details: string, pre: string) {
         this.dataArray.push(new Narration(step, details, pre));
     }
+
+    fallbackPre(expectedPreCount: number, genericMessage: string, realPre: string[]) {
+        var i = 1;
+        for (var ctx of realPre) {
+            this.addPre(genericMessage +
+                " (note: expected " + expectedPreCount + " backend queries but got " + realPre.length
+                + ", " + i++ + "/" + realPre.length + ")",
+                "A query was executed in the backend:",
+                ctx);
+        }
+    }
 }

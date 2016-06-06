@@ -67,31 +67,26 @@ export class HotelsComponent implements OnInit, OnDestroy {
     .map((response: Response) => response.json())
     .subscribe(
         (val) => {
-            this.data = val;
-            this.error = null;
+            this.data = val.data;
 
-            let executedQuery = {"query":{"conjuncts": [
-    {"field":"type","term":"landmark"},
-    {"disjuncts":[
-        {"field":"country","match_phrase":"France"},
-        {"field":"city","match_phrase":"France"},
-        {"field":"state","match_phrase":"France"},
-        {"field":"address","match_phrase":"France"}
-    ]},
-    {"field":"content","match":"hotel"},
-    {"disjuncts":[
-        {"field":"content","match_phrase":"golf"},
-        {"field":"name","match_phrase":"golf"}
-    ]}
-]},
-"size":100};
+            //we expect 2 context requests
+            if (val.context.length == 2) {
+                this._narrations.addPre("FTS query executed in the backend", "The following FTS query was executed in the backend:", val.context[0]);
+                this._narrations.addPre("Subdocument query executed in the backend", "The following subdocument fetch was executed in the backend:", val.context[1]);
+                this._narrations.add("SUCCESS", "Found " + this.data.length + " matching hotels");
+            } else {
+                this._narrations.fallbackPre(2, "SUCCESS (found " + this.data.length + " matching hotels)", val.context);
+            }
 
-            this._narrations.addPre("SUCCESS: Found " + val.length + " matching hotels", "The following FTS query was executed in the backend:", JSON.stringify(executedQuery, null, 2));
+
         },
         (error: Response) => {
             this.data = null;
             this.error = error.json();
-            this._narrations.add("ERROR", error.json());
+            if (this.error.failure) {
+                this.error = this.error.failure;
+            }
+            this._narrations.addPre("ERROR", "There was an error:", JSON.stringify(this.error, null, 2));
         }
     );
   }

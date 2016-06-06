@@ -11,7 +11,7 @@ import { Narration, NarrationService } from './narration.service'
 export class NarrationComponent implements OnInit {
   model: Narration[];
   selected: Narration;
-  collapsed: boolean;
+  collapsed: boolean = true;
   expandedPre: boolean;
   showExpandPre: boolean;
   private _sharedService: NarrationService;
