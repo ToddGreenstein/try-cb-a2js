@@ -5,7 +5,7 @@ import { LoginComponent } from './+login';
 import { UserComponent } from './+user';
 import { CartComponent } from './+cart';
 import { HotelsComponent } from './+hotels';
-import { AuthService,UtilityService, NavbarComponent } from './shared';
+import { AuthService,UtilityService, NavbarComponent, NarrationComponent, Narration, NarrationService } from './shared';
 import { Http, Request, RequestMethod, Headers, HTTP_PROVIDERS } from "@angular/http";
 
 @Component({
@@ -13,8 +13,8 @@ import { Http, Request, RequestMethod, Headers, HTTP_PROVIDERS } from "@angular/
   selector: 'try-app',
   templateUrl: 'try.component.html',
   styleUrls: ['try.component.css'],
-  directives: [ROUTER_DIRECTIVES, NavbarComponent],
-  providers: [ROUTER_PROVIDERS,AuthService,UtilityService,HTTP_PROVIDERS]
+  directives: [ROUTER_DIRECTIVES, NavbarComponent, NarrationComponent],
+  providers: [ROUTER_PROVIDERS,AuthService,UtilityService,NarrationService,HTTP_PROVIDERS]
 })
 @Routes([
   {path: '/home', component: HomeComponent},
@@ -26,11 +26,14 @@ import { Http, Request, RequestMethod, Headers, HTTP_PROVIDERS } from "@angular/
 export class TryAppComponent {
   router: Router;
   authService: AuthService;
-  constructor(router:Router,authService:AuthService){
+  narrationService: NarrationService;
+
+  constructor(router:Router,authService:AuthService, narrationService: NarrationService){
     this.authService=authService;
     this.router=router;
     if(!this.authService.isAuthenticated()){
       this.router.navigate(["login"]);
     }
+    this.narrationService = narrationService;
   }
 }

@@ -7,7 +7,7 @@
         <form role="form" class="form-signin" name="loginForm" novalidate>
         <h3 class="form-signin-heading" [hidden]="!isNew">Please Take a Moment to Create an Account</h3>
         <h3 class="form-signin-heading" [hidden]="isNew">Please Enter Your Username and Password</h3>
-        <div class="alert alert-warning" role="alert" [hidden]="!loginError">{{loginError}}</div>
+        <div class="alert alert-warning" role="alert" [hidden]="!loginError">{{loginError | json}}</div>
         <input type="text" placeholder="Please Enter Your Email Address" required [(ngModel)]="username" (keyup)="loginError=null" class="form-control" />
         <input type="password" placeholder="Enter a password" required="" [(ngModel)]="password" (keyup)="loginError=null" class="form-control" />
         <label class="checkbox">
