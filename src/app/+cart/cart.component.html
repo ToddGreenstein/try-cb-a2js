@@ -1,3 +1,8 @@
 <p>
   cart works!
+
+  <a class="button" (click)="createFakeBooking()">Click here to simulate a booking</a>
+
 </p>
+<div *ngIf="error" class="bg-danger text-danger">Error: {{error | json}}</div>
+<div *ngIf="added" class="bg-success">Added: {{added | json }}</div>
