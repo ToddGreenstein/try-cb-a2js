@@ -86,11 +86,25 @@ export class UtilityService {
         (error) => {
                 console.log("DEBUG: GET ERROR:",fullUrl,":",error);
             })
+        .catch(UtilityService.extractError);
     }
 
     private extractData(res: Response) {
         let body = res.json();
         return body.data || { };
+    }
+
+    public static extractError(res: Response): Observable<Response> {
+        let body = res.json();
+
+        if (body.failure) {
+            return Observable.throw(body.failure);
+        }
+        if (body.message) {
+            return Observable.throw(body.message);
+        }
+
+        return Observable.throw(body);
     }
 
     makeGetRequest(url: string, params: Array<string>) {

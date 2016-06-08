@@ -66,7 +66,7 @@ export class HotelsComponent implements OnInit, OnDestroy {
     this.utility.makeGetRequestObs(url, [])
     .map((response: Response) => response.json())
     .subscribe(
-        (val) => {
+        (val: any) => {
             this.data = val.data;
 
             //we expect 2 context requests
@@ -80,12 +80,9 @@ export class HotelsComponent implements OnInit, OnDestroy {
 
 
         },
-        (error: Response) => {
+        (error: any) => {
             this.data = null;
-            this.error = error.json();
-            if (this.error.failure) {
-                this.error = this.error.failure;
-            }
+            this.error = error;
             this._narrations.addPre("ERROR", "There was an error:", JSON.stringify(this.error, null, 2));
         }
     );
