@@ -25,14 +25,31 @@
                                 <div class="col-sm-9">
                                     <div class="input-group">
                                         <span class="input-group-addon">From</span>
-                                        <input type="text" placeholder="find airport"
-                                            class="input-sm form-control"
-                                            name="from" required />
+                                        <input [(ngModel)]="from"
+                                             [typeahead]="getFromAirport(getContext())"
+                                             (typeaheadLoading)="changeTypeaheadLoading($event)"
+                                             (typeaheadNoResults)="changeTypeaheadNoResults($event)"
+                                             (typeaheadOnSelect)="typeaheadOnSelect($event)"
+                                             [typeaheadOptionsLimit]="10"
+                                             [typeaheadOptionField]="'airportname'"
+                                             placeholder="Locations loaded with timeout"
+                                             class="input-sm form-control">
                                         <span class="input-group-addon ">To</span>
-                                        <input type="text"
-                                            placeholder="find airport"
-                                            class="input-sm form-control"
-                                            name="to" required/>
+                                        <input [(ngModel)]="to"
+                                             [typeahead]="getToAirport(getContext())"
+                                             (typeaheadLoading)="changeTypeaheadLoading($event)"
+                                             (typeaheadNoResults)="changeTypeaheadNoResults($event)"
+                                             (typeaheadOnSelect)="typeaheadOnSelect($event)"
+                                             [typeaheadOptionsLimit]="10"
+                                             [typeaheadOptionField]="'airportname'"
+                                             placeholder="Locations loaded with timeout"
+                                             class="input-sm form-control">
+                                    </div>
+                                    <div *ngIf="typeaheadLoading===true">
+                                      <i class="glyphicon glyphicon-refresh ng-hide" ></i>
+                                    </div>
+                                    <div *ngIf="typeaheadNoResults===true" class="">
+                                      <i class="glyphicon glyphicon-remove" style="font-size:8px"></i> No Results Found
                                     </div>
                                 </div>
                             </div>

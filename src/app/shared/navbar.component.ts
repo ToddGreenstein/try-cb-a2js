@@ -7,17 +7,17 @@ import { Router, Routes , ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/r
   selector: 'app-navbar',
   templateUrl: 'navbar.component.html',
   directives: [ROUTER_DIRECTIVES]
-  //styleUrls: []
 })
 
 export class NavbarComponent {
   authService:AuthService;
   router:Router;
-  isNew:Boolean;
 
   constructor(authService:AuthService,router:Router) {
     this.authService=authService;
-    this.isNew=true;
     this.router=router;
+    if(!this.authService.isAuthenticated()){
+      this.router.navigate(["login"]);
+    }
   }
 }

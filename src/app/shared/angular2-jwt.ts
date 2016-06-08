@@ -188,6 +188,7 @@ export class JwtHelper {
   }
 
   public decodeToken(token:string) {
+    console.log("DEBUG JWT:",token);
     var parts = token.split('.');
 
     if (parts.length !== 3) {

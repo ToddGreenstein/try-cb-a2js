@@ -4,6 +4,7 @@ import { UtilityService } from "./utility.service";
 import { environment } from "./../../app/";
 import { md5 } from './md5';
 import { JwtHelper } from './angular2-jwt';
+import { Router } from '@angular/router'
 
 
 @Injectable()
@@ -14,7 +15,7 @@ export class AuthService {
 
   constructor(utility: UtilityService) {
     this.utility = utility;
-    this.jwt= new JwtHelper();
+    this.jwt = new JwtHelper();
   }
 
   isAuthenticated() {
@@ -28,9 +29,13 @@ export class AuthService {
   getUser(){
     if (localStorage.getItem("user")) {
             return localStorage.getItem("user");
-        } else {
-            return null;
         }
+  }
+
+  getToken(){
+    if(localStorage.getItem("token")){
+      return localStorage.getItem("token");
+    }
   }
 
 login(email: string, password: string) {
@@ -40,8 +45,10 @@ login(email: string, password: string) {
         let cToken = result as IToken;
         if (cToken.status != "success") {
           reject(cToken.status);
+          return;
         }
         localStorage.setItem("user", this.jwt.decodeToken(cToken.token).user);
+        localStorage.setItem("token", cToken.token);
         resolve();
       } else {
         reject("User Error");
@@ -60,8 +67,11 @@ register(email: string, password:string) {
         let cToken = result as IToken;
         if (cToken.status != "success") {
           reject(cToken.status);
+          return;
         }
         localStorage.setItem("user", this.jwt.decodeToken(cToken.token).user);
+        localStorage.setItem("token", cToken.token);
+
         resolve();
       } else {
         reject("Registration Failure");

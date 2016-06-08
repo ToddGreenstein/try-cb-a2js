@@ -14,7 +14,8 @@ module.exports = function(defaults) {
       '@angular/**/*.+(js|js.map)',
       'bootstrap/dist/**/*.+(js|js.map|css|css.map|eot|svg|ttf|woff|woff2)',
       'jquery/dist/*.+(js|js.map)',
-      'ng2-bootstrap/**'
+      'moment/moment.js',
+      'ng2-bootstrap/**/*.+(js|js.map)'
     ]
   });
 };
