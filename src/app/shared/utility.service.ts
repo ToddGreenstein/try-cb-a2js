@@ -1,5 +1,5 @@
 import { Injectable, Inject } from "@angular/core";
-import { Http, Request, RequestMethod, Headers, URLSearchParams, HTTP_PROVIDERS, Response } from "@angular/http";
+import { Http, Request, RequestOptions, RequestMethod, Headers, URLSearchParams, HTTP_PROVIDERS, Response } from "@angular/http";
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/map'
@@ -64,13 +64,22 @@ export class UtilityService {
         });
     }
 
-    makeGetRequestObs(url: string, params: Array<string>) {
+    makeGetRequestObs(url: string, params: Array<string>, searchParams?: string) {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({headers: headers});
+
         var fullUrl: string = url;
         if(params && params.length > 0) {
             fullUrl = fullUrl + "/" + params.join("/");
         }
+
+        if (searchParams) {
+            let urlSearchParams: URLSearchParams = new URLSearchParams(searchParams);
+            options.search = urlSearchParams;
+        }
+
         console.log("DEBUG: GET FULL URL:",fullUrl);
-        return this.http.get(fullUrl)
+        return this.http.get(fullUrl, options)
         .do((success) => {
             console.log("DEBUG: GET RESPONSE:",fullUrl,":",success.json());
         },
