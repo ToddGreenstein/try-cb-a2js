@@ -1,0 +1,46 @@
+a {
+    cursor: pointer;
+    color: blue;
+    font-size: small;
+    font-family: monospace;
+}
+
+div.narration {
+    background-color: lightyellow;
+    color: black;
+}
+
+div.narration pre {
+    max-height: 100px;
+    overflow: auto;
+}
+
+div.narration pre.expanded {
+    max-height: none;
+}
+
+div.console {
+    background-color: black;
+    font-family: monospace;
+    color: white;
+    height: 110px;
+    overflow-y: scroll;
+}
+
+div.console li {
+    list-style-type: none;
+    cursor: pointer;
+}
+
+div.console li:hover {
+    color: yellow;
+}
+
+div.console li span.bullet {
+    font-weight: bold;
+}
+
+div.console li span.bullet.selected {
+    color: yellow;
+    text-decoration: none;
+}

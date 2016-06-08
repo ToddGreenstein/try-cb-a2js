@@ -1,5 +1,8 @@
 import { Injectable, Inject } from "@angular/core";
-import { Http, Request, RequestMethod, Headers, URLSearchParams, HTTP_PROVIDERS } from "@angular/http";
+import { Http, Request, RequestOptions, RequestMethod, Headers, URLSearchParams, HTTP_PROVIDERS, Response } from "@angular/http";
+import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/do'
+import 'rxjs/add/operator/map'
 
 @Injectable()
 
@@ -61,19 +64,58 @@ export class UtilityService {
         });
     }
 
-    makeGetRequest(url: string, params: Array<string>) {
+    makeGetRequestObs(url: string, params: Array<string>, searchParams?: string) {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({headers: headers});
+
         var fullUrl: string = url;
         if(params && params.length > 0) {
             fullUrl = fullUrl + "/" + params.join("/");
         }
+
+        if (searchParams) {
+            let urlSearchParams: URLSearchParams = new URLSearchParams(searchParams);
+            options.search = urlSearchParams;
+        }
+
         console.log("DEBUG: GET FULL URL:",fullUrl);
+        return this.http.get(fullUrl, options)
+        .do((success) => {
+            console.log("DEBUG: GET RESPONSE:",fullUrl,":",success.json());
+        },
+        (error) => {
+                console.log("DEBUG: GET ERROR:",fullUrl,":",error);
+            })
+        .catch(UtilityService.extractError);
+    }
+
+    private extractData(res: Response) {
+        let body = res.json();
+        return body.data || { };
+    }
+
+    public static extractError(res: Response): Observable<Response> {
+        let body = res.json();
+
+        if (body.failure) {
+            return Observable.throw(body.failure);
+        }
+        if (body.message) {
+            return Observable.throw(body.message);
+        }
+
+        return Observable.throw(body);
+    }
+
+    makeGetRequest(url: string, params: Array<string>) {
+        let obs = this.makeGetRequestObs(url, params);
         return new Promise((resolve, reject) => {
-            this.http.get(fullUrl)
+            obs
+            .map(this.extractData)
             .subscribe((success) => {
-                console.log("DEBUG: GET RESPONSE:",fullUrl,":",success.json());
-                resolve(success.json());
+                resolve(success);
             }, (error) => {
-                reject(error.json());
+                reject(error);
             });
         });
     }

@@ -35,14 +35,20 @@ export class AuthService {
 
 login(email: string, password: string) {
   return new Promise((resolve, reject) => {
-    this.utility.makeGetRequest(environment.devHost + "/api/user/login", [email, md5(password)]).then((result) => {
+    this.utility.makeGetRequest(environment.baseApiUrl + "/api/user/login", [email, md5(password)]).then((result) => {
       if (result) {
-        let cToken = result as IToken;
-        if (cToken.status != "success") {
-          reject(cToken.status);
+        if (environment.jwtEnabled) {
+            let cToken = result as IToken;
+            if (cToken.status != "success") {
+              reject(cToken.status);
+            }
+            localStorage.setItem("user", this.jwt.decodeToken(cToken.token).user);
+            resolve();
+        } else {
+            let user = result as any;
+            localStorage.setItem("user", user.name);
+            resolve();
         }
-        localStorage.setItem("user", this.jwt.decodeToken(cToken.token).user);
-        resolve();
       } else {
         reject("User Error");
       }
@@ -55,15 +61,21 @@ login(email: string, password: string) {
 register(email: string, password:string) {
   let cUser: IUser = { user: email, password: md5(password) };
   return new Promise((resolve, reject) => {
-    this.utility.makePostRequest(environment.devHost + "/api/user/login", [], cUser).then((result) => {
-      if (result) {
-        let cToken = result as IToken;
-        if (cToken.status != "success") {
-          reject(cToken.status);
-        }
-        localStorage.setItem("user", this.jwt.decodeToken(cToken.token).user);
-        resolve();
+    this.utility.makePostRequest(environment.baseApiUrl + "/api/user/login", [], cUser).then((response) => {
+      let result = response as any;
+      if (environment.jwtEnabled && result.data.token) {
+          try {
+              var store = this.jwt.decodeToken(result.data.token).user
+              localStorage.setItem("user", store);
+              resolve();
+          } catch (e) {
+              reject("Backend created account but returned a malformed token: " + e);
+          }
+      } else if (result.data.name) {
+          localStorage.setItem("user", result.data.name);
+          resolve();
       } else {
+        console.log("DEBUG: registration failure, got " + JSON.stringify(result.data));
         reject("Registration Failure");
       }
     }, (error) => {

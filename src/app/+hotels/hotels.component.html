@@ -1,3 +1,74 @@
-<p>
-  hotels works!
-</p>
+<div class="panel panel-default">
+  <div class="panel-heading">
+      <h3>Find Hotels</h3>
+  </div>
+  <div class="panel-body">
+  <form [ngFormModel]="hotelForm"
+        (ngSubmit)="findHotels(hotelForm.value)"
+        class="form-inline"
+        [class.has-error]="!hotelForm.valid">
+
+    <div class="form-group"
+      [class.has-error]="!hotelForm.find('description').valid">
+      <label for="descriptionInput">Description</label>
+      <input type="text"
+             id="descriptionInput"
+             placeholder="optional keyword"
+             #desc="ngForm"
+             [ngFormControl]="hotelForm.controls['description']"
+             class="form-control">
+    </div>
+
+    <div class="form-group"
+        [class.has-error]="!hotelForm.find('location').valid">
+      <label for="locationInput">Location</label>
+      <input type="text"
+             id="locationInput"
+             placeholder="eg. 'London', 'France'..."
+             #loc="ngForm"
+             [ngFormControl]="hotelForm.controls['location']"
+             class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-sm">Find Hotels</button>
+  </form>
+</div>
+</div>
+
+<div class="panel panel-default" *ngIf="data">
+    <div class="panel-heading">
+        <h3 class="panel-title">Matching POIs</h3>
+    </div>
+    <div class="panel-body">
+        <div *ngIf="data.length == 0">
+            No matching POI
+        </div>
+        <table *ngIf="data.length > 0" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let line of data">
+                    <td class="header">{{line.name}}</td>
+                    <td>{{line.address}}</td>
+                    <td>{{line.description}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <span *ngIf="data.length">
+        {{data.length}} matching point of interests (note that some might not be hotels).</span>
+    </div>
+</div>
+
+<div class="has-error" *ngIf="error">
+    <div class="help-block">There was an error (<a data-toggle="collapse" data-target="#errorDetail">click for details</a>)
+    </div>
+
+    <div id="errorDetail" class="collapse">{{error | json}}</div>
+</div>

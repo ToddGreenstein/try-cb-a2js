@@ -1,3 +1,39 @@
-<p>
-  user works!
-</p>
+<div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Flights booked for {{user}}:</h3>
+    </div>
+    <div class="panel-body">
+        <div *ngIf="booked && booked.length == 0">
+            <h3>{{user}}, you have no booked flights</h3>
+            <p>
+                <a [routerLink]="[ '/home']"><i class="glyphicon glyphicon-send"></i>&nbsp;search flights</a>
+                or
+                <a [routerLink]="[ '/cart']"><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp;purchase flights in the cart
+              </a>.
+            </p>
+        </div>
+        <table *ngIf="booked && booked.length > 0" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Booked Via</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let b of booked">
+                    <td>{{b.name}}</td>
+                    <td>{{b.date}}</td>
+                    <td>{{b.sourceairport}}</td>
+                    <td>{{b.destinationairport}}</td>
+                    <td>{{b.bookedon}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div *ngIf="error" class="bg-danger text-danger"><h4>Error: </h4><span class="help-text">{{error}}</span></div>
+    </div>
+    <div class="panel-footer"></div>
+</div>
