@@ -1,5 +1,8 @@
 import { Injectable, Inject } from "@angular/core";
-import { Http, Request, RequestMethod, Headers, URLSearchParams, HTTP_PROVIDERS } from "@angular/http";
+import { Http, Request, RequestMethod, Headers, URLSearchParams, HTTP_PROVIDERS, Response } from "@angular/http";
+import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/do'
+import 'rxjs/add/operator/map'
 
 @Injectable()
 export class UtilityService {
@@ -60,19 +63,35 @@ export class UtilityService {
         });
     }
 
-    makeGetRequest(url: string, params: Array<string>) {
+    makeGetRequestObs(url: string, params: Array<string>) {
         var fullUrl: string = url;
         if(params && params.length > 0) {
             fullUrl = fullUrl + "/" + params.join("/");
         }
         console.log("DEBUG: GET FULL URL:",fullUrl);
+        return this.http.get(fullUrl)
+        .do((success) => {
+            console.log("DEBUG: GET RESPONSE:",fullUrl,":",success.json());
+        },
+        (error) => {
+                console.log("DEBUG: GET ERROR:",fullUrl,":",error);
+            })
+        .map(this.extractData)
+    }
+
+    private extractData(res: Response) {
+        let body = res.json();
+        return body || { };
+    }
+
+    makeGetRequest(url: string, params: Array<string>) {
+        let obs = this.makeGetRequestObs(url, params);
         return new Promise((resolve, reject) => {
-            this.http.get(fullUrl)
+            obs
             .subscribe((success) => {
-                console.log("DEBUG: GET RESPONSE:",fullUrl,":",success.json());
-                resolve(success.json());
+                resolve(success);
             }, (error) => {
-                reject(error.json());
+                reject(error);
             });
         });
     }
